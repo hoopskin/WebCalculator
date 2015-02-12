@@ -1,0 +1,43 @@
+<html>
+    <head>
+        <link rel="stylesheet" type="text/css" href="styles.css">
+        <script type='text/javascript' src='newCalculator.js'></script>
+        <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+    </head>
+    <body>
+        <div id="leftArea">
+            <h1 id="runningTotal">Running Total: </h1>
+            <p id="calcDisplay">0</p>
+            <table id="calculator">
+                <tr>
+                    <td><button onclick="addNumber(7)">7</button></td>
+                    <td><button onclick="addNumber(8)">8</button></td>
+                    <td><button onclick="addNumber(9)">9</button></td>
+                    <td><button onclick="doOp('/')">/</button></td>
+                </tr>
+                <tr>
+                    <td><button onclick="addNumber(4)">4</button></td>
+                    <td><button onclick="addNumber(5)">5</button></td>
+                    <td><button onclick="addNumber(6)">6</button></td>
+                    <td><button onclick="doOp('X')">X</button></td>
+                </tr>
+                <tr>
+                    <td><button onclick="addNumber(1)">1</button></td>
+                    <td><button onclick="addNumber(2)">2</button></td>
+                    <td><button onclick="addNumber(3)">3</button></td>
+                    <td><button onclick="doOp('-')">-</button></td>
+                </tr>
+                <tr>
+                    <td><button onclick="addNumber(0)">0</button></td>
+                    <td><button onclick="addNumber('.')">.</button></td>
+                    <td><button onclick="equals()">=</button></td>
+                    <td><button onclick="doOp('+')">+</button></td>
+                </tr>
+            </table>
+        </div>
+        <div id="rightArea">
+            <table id="tape">
+            </table>
+        </div>
+    </body>
+</html>
