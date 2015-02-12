@@ -4,14 +4,46 @@ var tickerTape = {
     //Running total of calc input
     runningTotal: 0.0,
     //How precise to be with floats
-    precision: 0
+    precision: 2
 }
+
+function checkCookie() {
+    var lastCookie = document.cookie;
+    //If cookie exists, get object
+    if (lastCookie.length != 0) {
+        alert(lastCookie);
+        if (lastCookie.indexOf(";") == -1) {
+            tickerTape = JSON.parse(lastCookie.substring(lastCookie.indexOf(":")+1));            
+        } else {
+            //var lastKeyVal = lastCookie.substring(lastCookie.lastIndexOf(";")+1);
+            //tickerTape = JSON.parse(lastKeyVal.substring(lastKeyVal.indexOf(":")+1));
+            tickerTape = JSON.parse(document.cookie.substring(document.cookie.indexOf(":")+1,document.cookie.indexOf(";")));
+        }
+        //alert(tickerTape);
+        createTable(tickerTape.recentNumsAndOps);
+    } else {
+        alert("no cookie");   
+    }
+}
+
+function updateCookie() {
+    var d = new Date();
+    //Set time from 10 minutes from now
+    d.setTime(d.getTime() + (10*60*1000));
+    var expires = "expires="+d;
+    var cookieString = "object:"+JSON.stringify(tickerTape)+";"+expires;
+    //alert(cookieString);
+    document.cookie = cookieString;
+    //alert(document.cookie);
+}
+
+//End Cookie Code
 
 function push(number, symbol) {
     if(tickerTape.recentNumsAndOps.length == 20) {
         tickerTape.recentNumsAndOps.shift(1);
     }
-    tickerTape.recentNumsAndOps.push([number,symbol]);
+    tickerTape.recentNumsAndOps.push([number,symbol,tickerTape.runningTotal]);
 }
 
 function addNumber(num) {
@@ -30,8 +62,8 @@ function addNumber(num) {
 function add() {
     var displayNum = getNumber(document.getElementById("calcDisplay").innerHTML);
     if (goodToGo(displayNum)) {
-        push(displayNum,"+");
         tickerTape.runningTotal = parseFloat((tickerTape.runningTotal + displayNum).toFixed(tickerTape.precision));
+        push(displayNum,"+");
         clear();
         createTable(tickerTape.recentNumsAndOps);
     }
@@ -61,6 +93,7 @@ function doOp(mathSymbol) {
         push(displayNum,mathSymbol);
         clear();
         createTable(tickerTape.recentNumsAndOps);
+        updateCookie();
     }
 }
 
@@ -102,6 +135,7 @@ function equals() {
     push(displayNum, "=");
     clear();
     createTable(tickerTape.recentNumsAndOps);
+    updateCookie();
 }
 
 function clear() {
@@ -124,6 +158,7 @@ function clearEverything() {
 
 function getNumber(input) {
     if(input.indexOf(".") == -1) {
+        updatePrecision(input);
         return parseInt(input);   
     } else {
         updatePrecision(input);
@@ -132,17 +167,19 @@ function getNumber(input) {
 }
 
 function updatePrecision(input) {
-    tickerTape.precision = input.substring(input.indexOf(".")+1).length;
+    tickerTape.precision = Math.max(2,input.substring(".").length-input.length);
 }
 
 function createTable(tableData) {
+    
     //Update Running Total
     document.getElementById("runningTotal").innerHTML = "Running Total: " + tickerTape.runningTotal;
     
     //Update tape Table
     var table = $("#tape");
     table.empty();
+    table.append("<th>val</th><th>op</th><th>total</th>");
     $.each(tableData, function(idx, val) {
-        table.append("<tr><td>"+val[0]+"</td><td>"+val[1]+"</td></tr>");
+        table.append("<tr><td>"+val[0]+"</td><td>"+val[1]+"</td><td>"+val[2]+"</td></tr>");
     });
 }
