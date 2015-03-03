@@ -22,7 +22,7 @@ function checkCookie() {
         //alert(tickerTape);
         createTable(tickerTape.recentNumsAndOps);
     } else {
-        alert("no cookie");   
+        alert("no cookie");
     }
 }
 
@@ -32,9 +32,7 @@ function updateCookie() {
     d.setTime(d.getTime() + (10*60*1000));
     var expires = "expires="+d;
     var cookieString = "object:"+JSON.stringify(tickerTape)+";"+expires;
-    //alert(cookieString);
     document.cookie = cookieString;
-    //alert(document.cookie);
 }
 
 //End Cookie Code
